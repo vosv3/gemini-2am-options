@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gemini 2AM Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+        color-scheme: dark;
+        --green: #3CC730;
+        --green-dim: #2a8f20;
+        --green-glow: rgba(60, 199, 48, 0.3);
+        --black: #000000;
+        --card-bg: #0a0a0a;
+        --card-border: #1a1a1a;
+        --rule: #222;
+        --text-primary: #e0e0e0;
+        --text-secondary: #8a8a8a;
+        --text-faint: #555;
+        --amber: #D4A843;
+        --mono: 'Fira Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        --display: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; background: var(--black); }
+
+    body {
+        font-family: var(--mono);
+        background: var(--black);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        line-height: 1.6;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 3px; }
+
+    a:focus-visible, button:focus-visible { outline: 1px solid var(--green); outline-offset: 3px; }
+
+    /* Nav */
+    nav {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 1000;
+        padding: 0.9rem 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--card-border);
+    }
+    .logo {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+    .logo .x { color: var(--text-faint); font-weight: 400; }
+    .logo .client { color: #fff; }
+    .logo-dot {
+        width: 8px; height: 8px;
+        background: var(--green);
+        border-radius: 50%;
+        animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+        0%, 100% { box-shadow: 0 0 0 0 var(--green-glow); }
+        50% { box-shadow: 0 0 0 8px transparent; }
+    }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; flex-wrap: wrap; }
+    .nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.72rem;
+        transition: color 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    /* Sections */
+    main { padding-inline: 16px; }
+    section {
+        padding-block: 5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+        border-top: 1px solid #0f0f0f;
+    }
+    section:first-of-type { border-top: none; }
+    .section-label {
+        font-size: 0.75rem;
+        color: var(--green);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 1.25rem;
+    }
+    .section-title {
+        font-family: var(--display);
+        font-size: clamp(1.8rem, 4vw, 2.7rem);
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 1.25rem;
+        line-height: 1.15;
+        text-wrap: balance;
+    }
+    .section-subtitle {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        max-width: 65ch;
+        line-height: 1.8;
+    }
+
+    /* Hero */
+    .hero { padding-block: 6rem 4.5rem; position: relative; }
+    .hero::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(60, 199, 48, 0.015) 2px, rgba(60, 199, 48, 0.015) 4px);
+        pointer-events: none;
+    }
+    .hero-content { position: relative; }
+    .hero-pre { font-size: 0.8rem; color: var(--green-dim); margin-bottom: 1rem; }
+    .hero-headline {
+        font-family: var(--display);
+        font-size: clamp(2.4rem, 7vw, 4.6rem);
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.05;
+        margin-bottom: 1.5rem;
+        text-wrap: balance;
+    }
+    .hero-headline .dim { color: var(--text-faint); }
+    .cursor {
+        display: inline-block;
+        width: 0.08em; height: 0.9em;
+        background: var(--green);
+        margin-left: 0.08em;
+        animation: blink 1s steps(1) infinite;
+        vertical-align: -0.05em;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .hero-sub {
+        font-size: 0.98rem;
+        color: var(--text-secondary);
+        max-width: 60ch;
+        line-height: 1.8;
+        margin-bottom: 2.5rem;
+    }
+    .readout {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        border: 1px solid var(--card-border);
+        background: var(--card-bg);
+        border-radius: 6px;
+    }
+    .readout div { padding: 1rem 1.2rem; border-right: 1px solid var(--card-border); }
+    .readout div:last-child { border-right: none; }
+    .readout dt { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-faint); margin-bottom: 0.3rem; }
+    .readout dd { font-size: 0.85rem; color: #fff; }
+    .readout dd.green { color: var(--green); }
+
+    /* Portfolio terminal */
+    .portfolio-terminal { margin-top: 2rem; }
+    .portfolio-header {
+        display: flex; align-items: center; gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-bottom: none;
+        border-radius: 6px 6px 0 0;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dot-red { background: #ff5f57; } .dot-yellow { background: #febc2e; } .dot-green { background: #28c840; }
+    .portfolio-viewer {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 0 0 6px 6px;
+        overflow: hidden;
+    }
+    .portfolio-file-list { display: flex; border-bottom: 1px solid var(--card-border); overflow-x: auto; }
+    .portfolio-file-tab {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        border: none;
+        border-right: 1px solid var(--card-border);
+        border-bottom: 2px solid transparent;
+        white-space: nowrap;
+        transition: color 0.3s, background 0.3s;
+        background: transparent;
+        font-family: var(--mono);
+    }
+    .portfolio-file-tab:hover { color: var(--green); background: rgba(60, 199, 48, 0.05); }
+    .portfolio-file-tab.active { color: var(--green); background: rgba(60, 199, 48, 0.08); border-bottom-color: var(--green); }
+    .portfolio-slide[hidden] { display: none !important; }
+    .player {
+        position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9;
+        background: #050505; overflow: hidden;
+        border-bottom: 1px solid var(--card-border);
+    }
+    .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .player-loading {
+        position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+        font-family: var(--display); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+        font-size: clamp(1.8rem, 6vw, 4.5rem); color: rgba(255, 255, 255, 0.06); text-align: center; line-height: 1.1; padding: 1rem;
+    }
+    .slide-info {
+        display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem 2rem;
+        padding: clamp(1rem, 3vw, 1.75rem);
+    }
+    .slide-info .text { min-width: 0; flex: 1 1 320px; }
+    .slide-tag {
+        font-size: 0.62rem; color: var(--green);
+        text-transform: uppercase; letter-spacing: 0.2em;
+        margin-bottom: 0.6rem; display: inline-block;
+        border: 1px solid var(--green-dim); padding: 0.2rem 0.6rem;
+    }
+    .slide-title {
+        font-family: var(--display);
+        font-size: clamp(1.25rem, 3vw, 2rem);
+        font-weight: 700; color: #fff;
+        margin-bottom: 0.35rem; text-wrap: balance;
+    }
+    .slide-desc { font-size: 0.8rem; color: var(--text-secondary); max-width: 56ch; }
+    .watch {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        border: 1px solid var(--green); color: var(--green);
+        padding: 0.5rem 1rem; font-family: var(--mono); font-size: 0.78rem;
+        text-decoration: none; transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+        white-space: nowrap;
+    }
+    .watch:hover { background: var(--green); color: var(--black); box-shadow: 0 0 24px var(--green-glow); }
+    .watch .prompt { color: var(--green-dim); }
+    .watch:hover .prompt { color: var(--black); }
+    .studio-message {
+        margin-top: 2rem; padding: 1.5rem;
+        border-left: 2px solid var(--green-dim);
+        background: rgba(60, 199, 48, 0.03);
+        font-size: 0.85rem; color: var(--text-secondary); line-height: 1.8;
+    }
+    .studio-message strong { color: var(--green); font-weight: 500; }
+
+    /* Carts */
+    .carts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+    .cart {
+        background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px;
+        padding: 1.75rem; transition: border-color 0.3s;
+        display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .cart:hover { border-color: var(--green-dim); }
+    .cart .file { font-size: 0.72rem; color: var(--green); }
+    .cart h3 { font-family: var(--display); font-size: 1.15rem; color: #fff; font-weight: 600; }
+    .cart p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.7; }
+    .format-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: auto; padding-top: 0.5rem; }
+    .format-tag {
+        font-size: 0.62rem; color: var(--text-secondary);
+        border: 1px solid var(--card-border); padding: 0.2rem 0.5rem;
+        text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .approach { margin-top: 2rem; display: grid; gap: 0.9rem; }
+    .approach-item { display: flex; gap: 1rem; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; max-width: 75ch; }
+    .approach-item .icon { color: var(--green); flex-shrink: 0; }
+    .approach-item strong { color: #fff; font-weight: 500; }
+
+    /* Timeline */
+    .pipeline-container { margin-top: 2.5rem; position: relative; }
+    .pipeline-line { position: absolute; left: 18px; top: 0; bottom: 0; width: 2px; background: var(--card-border); }
+    .pipeline-step { display: flex; gap: 1.25rem; align-items: flex-start; margin-bottom: 1.9rem; position: relative; }
+    .pipeline-node {
+        width: 38px; height: 38px; border-radius: 50%;
+        background: var(--card-bg); border: 2px solid var(--green-dim);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.62rem; color: var(--green); font-weight: 700;
+        flex-shrink: 0; position: relative; z-index: 2;
+    }
+    .pipeline-step.key .pipeline-node { border-color: var(--green); animation: pulse-node 2s infinite; }
+    @keyframes pulse-node { 0%, 100% { box-shadow: 0 0 0 0 var(--green-glow); } 50% { box-shadow: 0 0 0 10px transparent; } }
+    .pipeline-info { flex: 1; padding-top: 0.2rem; min-width: 0; }
+    .pipeline-date { font-size: 0.7rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em; font-variant-numeric: tabular-nums; }
+    .pipeline-info h4 {
+        font-family: var(--display); font-size: 1rem; color: #fff; font-weight: 600;
+        margin: 0.1rem 0 0.3rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+    }
+    .pipeline-tag { font-size: 0.58rem; padding: 0.15rem 0.5rem; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--mono); font-weight: 400; }
+    .pipeline-tag.us { background: rgba(60, 199, 48, 0.15); color: var(--green); }
+    .pipeline-tag.you { background: rgba(212, 168, 67, 0.15); color: var(--amber); }
+    .pipeline-info p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; max-width: 70ch; }
+
+    /* Budget */
+    .budget { margin-top: 2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px; overflow: hidden; }
+    .budget-head { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--card-border); font-size: 0.8rem; color: var(--text-secondary); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; font-variant-numeric: tabular-nums; min-width: 620px; }
+    th, td { padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid #141414; vertical-align: top; }
+    th { font-size: 0.62rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-faint); }
+    td { color: var(--text-secondary); }
+    td.item { color: var(--text-primary); }
+    td.item small { display: block; color: var(--text-faint); font-size: 0.72rem; margin-top: 0.15rem; }
+    .num { text-align: right; white-space: nowrap; }
+    tr.group td { color: var(--green); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em; padding-top: 1.3rem; border-bottom-color: var(--card-border); }
+    tr.subtotal td { color: #fff; border-bottom: 1px solid var(--card-border); }
+    tr.included td.num { color: var(--green); }
+    .total-bar {
+        display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem 1.5rem;
+        padding: 1.4rem 1rem; border-top: 1px solid var(--green-dim); background: rgba(60, 199, 48, 0.04);
+    }
+    .total-bar .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-secondary); }
+    .total-bar .amount { font-family: var(--display); font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 800; color: var(--green); font-variant-numeric: tabular-nums; }
+    .budget-notes { margin-top: 1.5rem; display: grid; gap: 0.6rem; }
+    .budget-notes p { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.7; max-width: 80ch; display: flex; gap: 0.75rem; }
+    .budget-notes p::before { content: '>'; color: var(--green); flex-shrink: 0; }
+
+    /* Options */
+    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.25rem; margin-top: 2rem; align-items: stretch; }
+    .option {
+        background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px;
+        padding: 1.75rem; display: flex; flex-direction: column; gap: 0.9rem; position: relative;
+    }
+    .option.recommended { border-color: var(--green); box-shadow: 0 0 32px rgba(60, 199, 48, 0.08); }
+    .option .file { font-size: 0.72rem; color: var(--green); }
+    .option .badge {
+        position: absolute; top: -0.65rem; right: 1.25rem;
+        font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+        background: var(--green); color: var(--black); padding: 0.2rem 0.6rem; border-radius: 3px;
+    }
+    .option h3 { font-family: var(--display); font-size: 1.35rem; color: #fff; font-weight: 700; line-height: 1.2; }
+    .option .pitch { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.7; }
+    .option ul { list-style: none; display: grid; gap: 0.55rem; padding-top: 0.25rem; }
+    .option li { font-size: 0.78rem; color: var(--text-primary); line-height: 1.6; display: flex; gap: 0.6rem; }
+    .option li::before { content: '+'; color: var(--green); flex-shrink: 0; }
+    .option li.carry { color: var(--text-secondary); }
+    .option li.carry::before { content: '='; color: var(--text-faint); }
+    .option .price { margin-top: auto; padding-top: 1.25rem; border-top: 1px solid var(--card-border); }
+    .option .price .amount { font-family: var(--display); font-size: clamp(1.9rem, 4vw, 2.4rem); font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.1; }
+    .option.recommended .price .amount { color: var(--green); }
+    .option .price .unit { font-size: 0.68rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 0.3rem; }
+
+    /* Add-on */
+    .addon { margin-top: 2rem; border: 1px dashed #2a2a2a; border-radius: 6px; padding: clamp(1.25rem, 3vw, 2.25rem); background: #050505; }
+    .addon-status { display: inline-block; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber); border: 1px solid rgba(212, 168, 67, 0.4); padding: 0.2rem 0.6rem; margin-bottom: 1rem; }
+    .addon h3 { font-family: var(--display); font-size: 1.4rem; color: #fff; font-weight: 700; margin-bottom: 0.6rem; }
+    .addon > p { font-size: 0.85rem; color: var(--text-secondary); max-width: 68ch; line-height: 1.8; }
+    .runway { margin-top: 1.75rem; overflow-x: auto; }
+    .runway-grid { display: grid; grid-template-columns: 150px repeat(12, minmax(34px, 1fr)); min-width: 640px; font-size: 0.68rem; }
+    .runway-grid .wk { color: var(--text-faint); text-align: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--card-border); font-variant-numeric: tabular-nums; }
+    .runway-grid .lane { color: var(--text-secondary); padding: 0.7rem 0.75rem 0.7rem 0; border-bottom: 1px solid #111; white-space: nowrap; }
+    .runway-grid .cell { border-bottom: 1px solid #111; padding: 0.55rem 0; display: flex; align-items: center; }
+    .bar { height: 12px; width: 100%; }
+    .bar.core { background: var(--green-dim); }
+    .bar.core.bright { background: var(--green); }
+    .bar.addon-bar { background: repeating-linear-gradient(90deg, rgba(212, 168, 67, 0.55) 0 6px, transparent 6px 9px); }
+    .bar.start { border-radius: 3px 0 0 3px; } .bar.end { border-radius: 0 3px 3px 0; } .bar.solo { border-radius: 3px; }
+    .runway-legend { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-top: 1rem; font-size: 0.7rem; color: var(--text-secondary); }
+    .runway-legend span { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .swatch { width: 18px; height: 10px; display: inline-block; }
+
+    /* Terms */
+    .terms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 2.5rem; margin-top: 2rem; }
+    .term { padding: 1rem 0; border-bottom: 1px solid var(--card-border); }
+    .term dt { font-size: 0.8rem; color: #fff; margin-bottom: 0.3rem; }
+    .term dt::before { content: '> '; color: var(--green); }
+    .term dd { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* Final */
+    .final-cta { text-align: center; padding-block: 6rem; }
+    .terminal-block { display: inline-block; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px; padding: 1.5rem 2.5rem; margin-bottom: 1.75rem; max-width: 100%; }
+    .terminal-line { font-size: clamp(0.95rem, 2.5vw, 1.3rem); color: var(--green); }
+    .terminal-line .cmd { color: #fff; }
+    .final-cta p { font-size: 0.85rem; color: var(--text-secondary); max-width: 55ch; margin: 0 auto; line-height: 1.8; }
+
+    footer { border-top: 1px solid var(--card-border); padding: 2rem 16px; text-align: center; font-size: 0.7rem; color: var(--text-secondary); }
+    footer p + p { margin-top: 0.4rem; color: #444; }
+
+    @media (max-width: 768px) {
+        .nav-links { display: none; }
+        section { padding-block: 3.5rem; }
+        .hero { padding-block: 3.5rem 3rem; }
+        .readout div { border-right: none; border-bottom: 1px solid var(--card-border); }
+        .readout div:last-child { border-bottom: none; }
+        .pipeline-step { gap: 0.9rem; }
+        .terminal-block { padding: 1.25rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation: none !important; transition: none !important; }
+        html { scroll-behavior: auto; }
+    }
+</style>
+</head>
+<body>
+
+<nav>
+    <a href="#top" class="logo">
+        <span class="logo-dot"></span>
+        VAGABONDING <span class="x">×</span> <span class="client">GEMINI</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#films">Films</a></li>
+        <li><a href="#timeline">Timeline</a></li>
+        <li><a href="#options">Options</a></li>
+        <li><a href="#engine">Content Engine</a></li>
+        <li><a href="#terms">Terms</a></li>
+    </ul>
+</nav>
+
+<main id="top">
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-pre">&gt; scope --event nextpredict-nyc</div>
+            <h1 class="hero-headline">Three carts. 2am.<br><span class="dim">Finance never sleeps.</span><span class="cursor" aria-hidden="true"></span></h1>
+            <p class="hero-sub">
+                A scope of work, in three options, for short documentaries shot overnight during NEXTPredict NYC. Three coffee carts run at 2am, each staffed by a different Gemini employee, to show that finance never sleeps and to introduce Gemini's new exchange features through the people behind them. Thoughtful, observed storytelling of people in motion on a mission, not fast-paced social content.
+            </p>
+            <dl class="readout">
+                <div><dt>Event</dt><dd>NEXTPredict NYC · Oct 22-23</dd></div>
+                <div><dt>Shoot</dt><dd>Night of Oct 23 into 24*</dd></div>
+                <div><dt>Deliverables</dt><dd>1 or 3 short docs · ~5 min each</dd></div>
+                <div><dt>Rough cuts v1</dt><dd class="green">Fri Nov 6, 2026</dd></div>
+            </dl>
+            <p style="font-size:0.7rem;color:var(--text-faint);margin-top:0.75rem;">* Shoot night is provisional and may move. Dates below shift with it.</p>
+        </div>
+    </section>
+
+    <!-- Work -->
+    <section id="work">
+        <div class="section-label">&gt; ls ~/gemini/</div>
+        <h2 class="section-title">What we've made together</h2>
+        <p class="section-subtitle">
+            The same documentary approach we've previously created together: real people and real moments, filmed as they happen. These three pieces are the reference point for the tone of the 2am films.
+        </p>
+
+        <div class="portfolio-terminal">
+            <div class="portfolio-header">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+                <span style="margin-left: 0.5rem;">~/gemini/ - 3 items</span>
+            </div>
+            <div class="portfolio-viewer">
+                <div class="portfolio-file-list" role="tablist">
+                    <button class="portfolio-file-tab active" data-index="0" role="tab" aria-selected="true">austin-drone.proj</button>
+                    <button class="portfolio-file-tab" data-index="1" role="tab" aria-selected="false">gwdw-billboards.proj</button>
+                    <button class="portfolio-file-tab" data-index="2" role="tab" aria-selected="false">paris.proj</button>
+                </div>
+                <div class="portfolio-slide" data-src="https://drive.google.com/file/d/19T-fYwHZI5NitMTEO-CLl_71SWhQhgp1/preview">
+                    <div class="player"><span class="player-loading" aria-hidden="true">Austin<br>Drone Show</span></div>
+                    <div class="slide-info">
+                        <div class="text">
+                            <span class="slide-tag">Documentary</span>
+                            <h3 class="slide-title">SXSW Drone Show</h3>
+                            <p class="slide-desc">The drone show documentary, filmed in Austin at SXSW.</p>
+                        </div>
+                        <a class="watch" href="https://drive.google.com/file/d/19T-fYwHZI5NitMTEO-CLl_71SWhQhgp1/view" target="_blank" rel="noopener"><span class="prompt">$</span> open fullscreen ↗</a>
+                    </div>
+                </div>
+                <div class="portfolio-slide" data-src="https://drive.google.com/file/d/1ca0_KB8yXtp5pMKaQWl_yUjWUTCd0S5I/preview" hidden>
+                    <div class="player"><span class="player-loading" aria-hidden="true">Go Where<br>Dollars Won't</span></div>
+                    <div class="slide-info">
+                        <div class="text">
+                            <span class="slide-tag">Documentary</span>
+                            <h3 class="slide-title">Go Where Dollars Won't: NYC Billboards</h3>
+                            <p class="slide-desc">A documentary on the Go Where Dollars Won't billboard day in New York.</p>
+                        </div>
+                        <a class="watch" href="https://drive.google.com/file/d/1ca0_KB8yXtp5pMKaQWl_yUjWUTCd0S5I/view" target="_blank" rel="noopener"><span class="prompt">$</span> open fullscreen ↗</a>
+                    </div>
+                </div>
+                <div class="portfolio-slide" data-src="https://drive.google.com/file/d/1H2JaXAttNdwIU7jALdlCx4uitkOX1nhp/preview" hidden>
+                    <div class="player"><span class="player-loading" aria-hidden="true">Paris</span></div>
+                    <div class="slide-info">
+                        <div class="text">
+                            <span class="slide-tag">BTS Documentary</span>
+                            <h3 class="slide-title">A Bitcoin Transaction on the Eiffel Tower</h3>
+                            <p class="slide-desc">Behind the scenes in Paris, following a Bitcoin transaction on the Eiffel Tower.</p>
+                        </div>
+                        <a class="watch" href="https://drive.google.com/file/d/1H2JaXAttNdwIU7jALdlCx4uitkOX1nhp/view" target="_blank" rel="noopener"><span class="prompt">$</span> open fullscreen ↗</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="studio-message">
+            <strong>Proof, not claims.</strong> Each of these worked because it showed something real happening. The 2am films apply the same approach to a new cast of characters: the Gemini people running the carts, and the people they meet at 2am.
+        </div>
+    </section>
+
+    <!-- Films -->
+    <section id="films">
+        <div class="section-label">&gt; ls ~/deliverables/</div>
+        <h2 class="section-title">Three carts, three films</h2>
+        <p class="section-subtitle">
+            One short documentary per coffee cart, each around five minutes, each centred on a different Gemini employee. All three carts run on the same night, so the films share one world and can be released as a set. Option one films a single cart; options two and three film all three.
+        </p>
+
+        <div class="carts">
+            <div class="cart">
+                <div class="file">cart_01.mov</div>
+                <h3>Film one</h3>
+                <p>A Gemini employee runs the first cart through the night: who they are, why they're out at 2am, and what they're building.</p>
+                <div class="format-tags"><span class="format-tag">~5 min</span><span class="format-tag">16:9</span><span class="format-tag">Documentary</span></div>
+            </div>
+            <div class="cart">
+                <div class="file">cart_02.mov</div>
+                <h3>Film two</h3>
+                <p>A second employee at a second cart, with their own conversations and their own corner of the city.</p>
+                <div class="format-tags"><span class="format-tag">~5 min</span><span class="format-tag">16:9</span><span class="format-tag">Documentary</span></div>
+            </div>
+            <div class="cart">
+                <div class="file">cart_03.mov</div>
+                <h3>Film three</h3>
+                <p>A third employee and a third cart. Together, the three films show one night seen from three places.</p>
+                <div class="format-tags"><span class="format-tag">~5 min</span><span class="format-tag">16:9</span><span class="format-tag">Documentary</span></div>
+            </div>
+        </div>
+
+        <div class="approach">
+            <div class="approach-item"><span class="icon">&gt;</span><span><strong>Observed, not staged.</strong> People in motion, doing the thing. Space for the quieter in-between moments that make someone real on screen.</span></div>
+            <div class="approach-item"><span class="icon">&gt;</span><span><strong>Street conversations.</strong> Each Gemini employee can put questions to the people who stop at their cart, so the story comes out of real exchanges.</span></div>
+            <div class="approach-item"><span class="icon">&gt;</span><span><strong>Pre-shoot session in New York.</strong> Guy meets the Gemini team a couple of days before the shoot to align on the employees, the cart locations and the story each film is for. Part of every option.</span></div>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section id="timeline">
+        <div class="section-label">&gt; cat ~/timeline.log</div>
+        <h2 class="section-title">From the event to the first cuts</h2>
+        <p class="section-subtitle">
+            Rough cuts arrive two weeks after the event, whichever option you choose. Every date after that depends on how quickly consolidated feedback comes back.
+        </p>
+
+        <div class="pipeline-container">
+            <div class="pipeline-line"></div>
+
+            <div class="pipeline-step">
+                <div class="pipeline-node">PRE</div>
+                <div class="pipeline-info">
+                    <div class="pipeline-date">Now → Oct 21</div>
+                    <h4>Story lock and casting <span class="pipeline-tag you">Gemini</span><span class="pipeline-tag us">Vagabonding</span></h4>
+                    <p>Gemini confirms the three employees, cart locations and the new exchange features each film supports, and names one decision-maker for approvals.</p>
+                </div>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="pipeline-node">NYC</div>
+                <div class="pipeline-info">
+                    <div class="pipeline-date">A couple of days before the shoot</div>
+                    <h4>Pre-shoot session in New York <span class="pipeline-tag us">Every option</span></h4>
+                    <p>Guy meets the team in person to walk through each cart and each employee's story.</p>
+                </div>
+            </div>
+
+            <div class="pipeline-step key">
+                <div class="pipeline-node">2AM</div>
+                <div class="pipeline-info">
+                    <div class="pipeline-date">Night of Fri Oct 23 → Sat Oct 24 (provisional)</div>
+                    <h4>The shoot <span class="pipeline-tag us">2 production days</span></h4>
+                    <p>All carts filmed on the same night during NEXTPredict NYC.</p>
+                </div>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="pipeline-node">48H</div>
+                <div class="pipeline-info">
+                    <div class="pipeline-date">Within 48 hours of the shoot</div>
+                    <h4>Teaser <span class="pipeline-tag us">Option three</span></h4>
+                    <p>A 60-second teaser cut from the night, ready to post while the event is still fresh.</p>
+                </div>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="pipeline-node">EDIT</div>
+                <div class="pipeline-info">
+                    <div class="pipeline-date">Oct 26 → Nov 6</div>
+                    <h4>Story cut <span class="pipeline-tag us">Vagabonding</span></h4>
+                    <p>James Roberts builds the story for each film as creative director, then hands off to a senior editor for picture, sound and colour.</p>
+                </div>
+            </div>
+
+            <div class="pipeline-step key">
+                <div class="pipeline-node">v1</div>
+                <div class="pipeline-info">
+                    <div class="pipeline-date">Fri Nov 6, 2026</div>
+                    <h4>Rough cuts v1 <span class="pipeline-tag us">Delivery</span></h4>
+                    <p>Shared for review on Frame.io, with time-coded comments in one place.</p>
+                </div>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="pipeline-node">R1</div>
+                <div class="pipeline-info">
+                    <div class="pipeline-date">After v1</div>
+                    <h4>Feedback rounds <span class="pipeline-tag you">Gemini</span><span class="pipeline-tag us">Vagabonding</span></h4>
+                    <p>Consolidated written feedback per film, each round followed by a revised cut. One round in option one, two rounds in options two and three.</p>
+                </div>
+            </div>
+
+            <div class="pipeline-step" style="margin-bottom:0;">
+                <div class="pipeline-node">FIN</div>
+                <div class="pipeline-info">
+                    <div class="pipeline-date">On approval</div>
+                    <h4>Final masters <span class="pipeline-tag us">Delivery</span></h4>
+                    <p>Final exports of every film, ready for release.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Options -->
+    <section id="options">
+        <div class="section-label">&gt; ls ~/options/</div>
+        <h2 class="section-title">Three ways to film the night</h2>
+        <p class="section-subtitle">
+            Each option is a fixed price for the scope it describes. The difference between them is how much of the night we capture and how long the footage keeps working for Gemini after the event.
+        </p>
+
+        <div class="options">
+            <div class="option">
+                <div class="file">option_01 / one-cart</div>
+                <h3>One cart, one film</h3>
+                <p class="pitch">A single story from the night, told properly.</p>
+                <ul>
+                    <li>One ~5 min documentary: one cart, one Gemini employee</li>
+                    <li>Solo documentary filmmaker for the night</li>
+                    <li>Pre-shoot session with the team in New York</li>
+                    <li>One round of consolidated feedback</li>
+                    <li>Final 16:9 master</li>
+                </ul>
+                <div class="price">
+                    <div class="amount">$11,000</div>
+                    <div class="unit">Fixed · USD</div>
+                </div>
+            </div>
+
+            <div class="option recommended">
+                <span class="badge">Recommended</span>
+                <div class="file">option_02 / three-carts</div>
+                <h3>Three carts, three films</h3>
+                <p class="pitch">The full night from three places, released as a set, with cutdowns ready for social.</p>
+                <ul>
+                    <li>Three ~5 min documentaries, one per cart and employee</li>
+                    <li>Solo documentary filmmaker across all three carts</li>
+                    <li>Pre-shoot session with the team in New York</li>
+                    <li>Two rounds of consolidated feedback per film</li>
+                    <li>Three vertical cutdowns per film, nine in total, for social</li>
+                    <li>Clip catalogue of selects from the night, for Gemini's own team</li>
+                    <li>Final 16:9 masters of all three films</li>
+                </ul>
+                <div class="price">
+                    <div class="amount">$28,000</div>
+                    <div class="unit">Fixed · USD</div>
+                </div>
+            </div>
+
+            <div class="option">
+                <div class="file">option_03 / the-2am-series</div>
+                <h3>The 2am series</h3>
+                <p class="pitch">The films, full coverage of every cart, and a content engine that runs for weeks after release.</p>
+                <ul>
+                    <li class="carry">Everything in option two</li>
+                    <li>Second camera operator, so every cart is covered through the night</li>
+                    <li>60-second teaser delivered within 48 hours of the shoot</li>
+                    <li>Content engine: a short-form catalogue cut from the films and unused footage</li>
+                    <li>Release calendar planned with Gemini through week 12 from the shoot</li>
+                    <li>Weekly check-in with James and Guy through the release calendar</li>
+                </ul>
+                <div class="price">
+                    <div class="amount">$48,000</div>
+                    <div class="unit">Fixed · USD</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="budget-notes">
+            <p>All amounts in USD. Payable by bank transfer or Bitcoin.</p>
+            <p>Each price is fixed for the scope listed. Extra feedback rounds and extra deliverables beyond those included are billed at $200 per hour.</p>
+            <p>Our costs on the shoot, such as local transport and rented equipment, are covered by the fixed price. There are no expenses to approve and no expense reports.</p>
+            <p>Storage of the raw footage is included in each price as a one-time cost, with no annual storage fee.</p>
+        </div>
+    </section>
+
+    <!-- Content engine add-on -->
+    <section id="engine">
+        <div class="section-label">&gt; cat ~/phase-2.md</div>
+        <h2 class="section-title">After release: the content engine</h2>
+        <p class="section-subtitle">
+            The footage from one night can keep feeding Gemini's channels for weeks after the event. The content engine is part of option three. With options one or two, it can be added after release.
+        </p>
+
+        <div class="addon">
+            <span class="addon-status">Included in option three</span>
+            <h3>Short-form catalogue and content calendar</h3>
+            <p>
+                Once the films are approved and released, we cut a catalogue of short-form pieces from the films and the unused footage, and plan them into a release calendar with Gemini's team. With options one or two, we can quote this phase after release, once we see how the films perform.
+            </p>
+
+            <div class="runway" role="img" aria-label="Estimated runway: shoot in week 0, rough cuts by week 2, feedback and final masters weeks 3 to 4, film release around week 5, then a short-form content calendar from weeks 6 to 12.">
+                <div class="runway-grid">
+                    <div class="wk" style="text-align:left;">Week from shoot</div>
+                    <div class="wk">0</div><div class="wk">1</div><div class="wk">2</div><div class="wk">3</div><div class="wk">4</div><div class="wk">5</div><div class="wk">6</div><div class="wk">7</div><div class="wk">8</div><div class="wk">9</div><div class="wk">10</div><div class="wk">11</div>
+
+                    <div class="lane">Shoot</div>
+                    <div class="cell"><div class="bar core bright solo"></div></div>
+                    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+                    <div class="lane">Rough cuts v1</div>
+                    <div class="cell"></div>
+                    <div class="cell"><div class="bar core start"></div></div><div class="cell"><div class="bar core end"></div></div>
+                    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+                    <div class="lane">Feedback → masters</div>
+                    <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                    <div class="cell"><div class="bar core start"></div></div><div class="cell"><div class="bar core end"></div></div>
+                    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+                    <div class="lane">Film release</div>
+                    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                    <div class="cell"><div class="bar core bright solo"></div></div>
+                    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+                    <div class="lane">Short-form calendar</div>
+                    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                    <div class="cell"><div class="bar addon-bar start"></div></div><div class="cell"><div class="bar addon-bar"></div></div><div class="cell"><div class="bar addon-bar"></div></div><div class="cell"><div class="bar addon-bar"></div></div><div class="cell"><div class="bar addon-bar"></div></div><div class="cell"><div class="bar addon-bar end"></div></div>
+                </div>
+            </div>
+            <div class="runway-legend">
+                <span><i class="swatch" style="background:var(--green-dim);"></i> Every option</span>
+                <span><i class="swatch" style="background:repeating-linear-gradient(90deg, rgba(212,168,67,0.55) 0 6px, transparent 6px 9px);"></i> Content engine (option three)</span>
+                <span style="color:var(--text-faint);">Estimated. Weeks from release onward depend on feedback turnaround.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terms -->
+    <section id="terms">
+        <div class="section-label">&gt; man terms</div>
+        <h2 class="section-title">Terms</h2>
+        <p class="section-subtitle">This scope runs under Vagabonding Media's Standard Terms of Engagement, covering revisions, approvals, invoicing, ownership, cancellation and rush requests.</p>
+        <a class="watch" style="margin-top:1.75rem;" href="https://vagabonding.notion.site/Standard-Terms-of-Engagement-343f666e108181dd94e0d73682d07380" target="_blank" rel="noopener"><span class="prompt">$</span> open standard-terms</a>
+    </section>
+
+    <!-- Close -->
+    <section class="final-cta">
+        <p>We'll walk through the three options with you on a call. Once you've chosen one and confirmed the employees, a deposit under our Standard Terms locks the night of Oct 23, and we'll send the pre-shoot agenda for the New York session.</p>
+    </section>
+
+</main>
+
+<footer>
+    <p>Vagabonding Media · Scope of work prepared for Gemini · October 2026</p>
+    <p>hello@vagabondingmedia.com</p>
+</footer>
+
+<script>
+    // Portfolio viewer: each Frame player loads the first time its tab is opened.
+    const slides = document.querySelectorAll('.portfolio-slide');
+    const tabs = document.querySelectorAll('.portfolio-file-tab');
+
+    function load(slide) {
+        if (slide.dataset.loaded) return;
+        const f = document.createElement('iframe');
+        f.src = slide.dataset.src;
+        f.title = slide.querySelector('.slide-title').textContent;
+        f.allow = 'autoplay; fullscreen; picture-in-picture';
+        f.allowFullscreen = true;
+        f.loading = 'lazy';
+        slide.querySelector('.player').appendChild(f);
+        slide.dataset.loaded = '1';
+    }
+
+    function goTo(i) {
+        slides.forEach((s, n) => { s.hidden = n !== i; });
+        tabs.forEach((t, n) => {
+            t.classList.toggle('active', n === i);
+            t.setAttribute('aria-selected', n === i ? 'true' : 'false');
+        });
+        load(slides[i]);
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => goTo(parseInt(t.dataset.index, 10))));
+    goTo(0);
+</script>
+
+</body>
+</html>
